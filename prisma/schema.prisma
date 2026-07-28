@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SkillCategory {
+  Frontend
+  Backend
+  DevOps
+  Tools
+  Other
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String?
+  name         String
+  createdAt    DateTime @default(now())
+
+  about      About[]
+  skills     Skill[]
+  experience Experience[]
+  projects   Project[]
+  magicTokens MagicToken[]
+}
+
+model About {
+  id        String  @id @default(uuid())
+  bio       String
+  avatarUrl String?
+  resumeUrl String?
+  userId    String  @unique
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Skill {
+  id          String        @id @default(uuid())
+  name        String
+  category    SkillCategory
+  proficiency Int
+  icon        String?
+  order       Int           @default(0)
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Experience {
+  id          String   @id @default(uuid())
+  company     String
+  role        String
+  startDate   DateTime
+  endDate     DateTime?
+  description String
+  order       Int      @default(0)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  imageUrl    String?
+  techs       String[]
+  liveUrl     String?
+  githubUrl   String?
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model MagicToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
