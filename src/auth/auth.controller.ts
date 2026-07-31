@@ -3,20 +3,20 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { MagicLinkDto } from './dto/magic-link.dto';
-import { Response, Request } from 'express';
+import { Response } from 'express';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
-    const result = await this.authService.register(dto);
-
-    const { accessToken } = await this.authService.login({
-      email: dto.email,
-      password: dto.password,
-    });
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken } = await this.authService.register(dto);
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
@@ -26,11 +26,14 @@ export class AuthController {
       domain: process.env.COOKIE_DOMAIN,
     });
 
-    return { message: 'Registered successfully', user: result };
+    return { message: 'Registered successfully' };
   }
 
   @Post('login')
-  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken } = await this.authService.login(dto);
 
     res.cookie('access_token', accessToken, {
@@ -50,7 +53,10 @@ export class AuthController {
   }
 
   @Post('verify-magic-link')
-  async verifyMagicLink(@Query('token') token: string, @Res({ passthrough: true }) res: Response) {
+  async verifyMagicLink(
+    @Query('token') token: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken } = await this.authService.verifyMagicLink(token);
 
     res.cookie('access_token', accessToken, {
@@ -65,7 +71,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response) {
+  logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token', {
       domain: process.env.COOKIE_DOMAIN,
     });
@@ -73,7 +79,9 @@ export class AuthController {
   }
 
   @Get('me')
-  async getMe(@Req() req: Request) {
-    return this.authService.getMe((req as any).user.id);
+  @UseGuards(AuthGuard('jwt'))
+  getMe(@Req() req: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    return this.authService.getMe(req.user.id);
   }
 }

@@ -21,7 +21,7 @@ export class AuthService {
     private readonly emailService: EmailService,
   ) {}
 
-  async register(dto: RegisterDto): Promise<{ accessToken: String }> {
+  async register(dto: RegisterDto): Promise<{ accessToken: string }> {
     const existUser: User | null | undefined =
       await this.prisma.user.findUnique({
         where: { email: dto.email },

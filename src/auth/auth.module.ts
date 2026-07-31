@@ -18,12 +18,12 @@ import { JwtStrategy } from './jwt.strategy';
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
           expiresIn: '7d',
-        }
-      })
-    })
+        },
+      }),
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService, EmailService, JwtStrategy],
   exports: [AuthService, JwtModule],
 })
-export class AuthModule{}
+export class AuthModule {}
