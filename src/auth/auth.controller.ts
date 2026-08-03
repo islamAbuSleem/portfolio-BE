@@ -6,6 +6,7 @@ import { MagicLinkDto } from './dto/magic-link.dto';
 import { Response } from 'express';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { getCookieOptions } from './cookie-options';
 
 @Controller('auth')
 export class AuthController {
@@ -18,13 +19,7 @@ export class AuthController {
   ) {
     const { accessToken } = await this.authService.register(dto);
 
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      domain: process.env.COOKIE_DOMAIN,
-    });
+    res.cookie('access_token', accessToken, getCookieOptions());
 
     return { message: 'Registered successfully' };
   }
@@ -36,13 +31,7 @@ export class AuthController {
   ) {
     const { accessToken } = await this.authService.login(dto);
 
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      domain: process.env.COOKIE_DOMAIN,
-    });
+    res.cookie('access_token', accessToken, getCookieOptions());
 
     return { message: 'Logged in' };
   }
@@ -59,22 +48,14 @@ export class AuthController {
   ) {
     const { accessToken } = await this.authService.verifyMagicLink(token);
 
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      domain: process.env.COOKIE_DOMAIN,
-    });
+    res.cookie('access_token', accessToken, getCookieOptions());
 
     return { message: 'Logged in via magic link' };
   }
 
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token', {
-      domain: process.env.COOKIE_DOMAIN,
-    });
+    res.clearCookie('access_token', getCookieOptions());
     return { message: 'Logged out' };
   }
 
