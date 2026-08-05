@@ -125,7 +125,12 @@ export class AuthService {
   async getMe(userId: string) {
     return this.prisma.user.findUnique({
       where: { id: userId },
-      include: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+        about: true,
         skills: { orderBy: { order: 'asc' } },
         experience: { orderBy: { order: 'asc' } },
         projects: { orderBy: { order: 'asc' } },
