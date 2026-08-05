@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -7,6 +7,7 @@ import { Response } from 'express';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { getCookieOptions } from './cookie-options';
+import { CurrentUserId } from '../common/decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -61,8 +62,7 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
-  getMe(@Req() req: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    return this.authService.getMe(req.user.id);
+  getMe(@CurrentUserId() userId: string) {
+    return this.authService.getMe(userId);
   }
 }
