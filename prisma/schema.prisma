@@ -60,6 +60,7 @@ model Experience {
   role        String
   startDate   DateTime
   endDate     DateTime?
+  current     Boolean  @default(false)
   description String
   order       Int      @default(0)
   userId      String

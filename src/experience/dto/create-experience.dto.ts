@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDateString,
   IsNotEmpty,
   IsOptional,
@@ -35,6 +36,10 @@ export class CreateExperienceDto {
   @IsOptional()
   @IsDateString()
   endDate?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  current?: boolean;
 
   @IsString()
   @IsNotEmpty()
