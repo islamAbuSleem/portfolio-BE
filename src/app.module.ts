@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+import { AboutModule } from './about/about.module';
 import { CommonModule } from './common/common.module';
 import { ConfigModule } from '@nestjs/config';
 
@@ -10,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     PrismaModule,
     AuthModule,
+    AboutModule,
     CommonModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],
