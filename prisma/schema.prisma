@@ -29,12 +29,14 @@ model User {
 }
 
 model About {
-  id        String  @id @default(uuid())
-  bio       String
+  id        String   @id @default(uuid())
+  bio       String   @db.Text
   avatarUrl String?
   resumeUrl String?
-  userId    String  @unique
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Skill {
@@ -48,6 +50,8 @@ model Skill {
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+
+  @@index([userId, order])
 }
 
 model Experience {
@@ -62,6 +66,8 @@ model Experience {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId, order])
 }
 model Project {
   id          String   @id @default(uuid())
@@ -77,6 +83,8 @@ model Project {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId, order])
 }
 model MagicToken {
   id        String   @id @default(uuid())
@@ -86,4 +94,7 @@ model MagicToken {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([token])
 }
