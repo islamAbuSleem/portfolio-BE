@@ -1,20 +1,37 @@
 import "dotenv/config";
 import { PrismaClient, SkillCategory } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import * as bcrypt from 'bcrypt';
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'admin12345';
+
   const user = await prisma.user.upsert({
     where: { email: 'admin@example.com' },
     update: {},
     create: {
       email: 'admin@example.com',
-      passwordHash: '$2b$10$placeholder',
+      passwordHash: await bcrypt.hash(adminPassword, 10),
       name: 'Islam Abu Sleem',
     },
   });
+
+  if (!user.passwordHash || user.passwordHash === '$2b$10$placeholder') {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash: await bcrypt.hash(adminPassword, 10) },
+    });
+    console.log('Admin password fixed (was placeholder/invalid hash)');
+  }
+
+  const existingContent = await prisma.skill.count({ where: { userId: user.id } });
+  if (existingContent > 0) {
+    console.log('Seed data already present - skipping content seeding');
+    return;
+  }
 
   await prisma.about.upsert({
     where: { userId: user.id },
