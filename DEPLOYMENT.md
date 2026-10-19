@@ -1,4 +1,4 @@
-﻿# Deploying portfolio-BE (Render Free + Neon)
+# Deploying portfolio-BE (Render Free + Neon)
 
 NestJS 11 + Prisma 7 + PostgreSQL, on Render's free web service with Neon
 for the database.
@@ -15,7 +15,7 @@ for the database.
 |---|---|
 | `npm run start:dev` | Watch mode |
 | `npm run build` | `prisma generate` (via `prebuild`) then `nest build` â†’ `dist/` |
-| `npm run start:prod` | `node dist/main` â€” the production start command |
+| `npm run start:prod` | `node dist/main` ”” the production start command |
 | `npm run db:generate` | Regenerate the Prisma client |
 | `npm run db:migrate` | Create a migration (local/dev) |
 | `npm run db:deploy` | Apply pending migrations (production) |
@@ -54,11 +54,11 @@ everything; supply the `sync: false` values.
 |---|---|---|
 | `DATABASE_URL` | yes | Neon **pooled** URL (host contains `-pooler`) |
 | `JWT_SECRET` | yes | `openssl rand -base64 48` (Render can generate it) |
-| `FRONTEND_URL` | yes | `https://portfolio-fe.islamabusleem.workers.dev` â€” comma-separated allow-list |
+| `FRONTEND_URL` | yes | `https://portfolio-fe.islamabusleem.workers.dev` ”” comma-separated allow-list |
 | `APP_URL` | recommended | The same origin, used to build magic-link emails |
 | `TRUST_PROXY` | recommended | `1` |
-| `NODE_ENV` | â€” | `production` (Render sets this) |
-| `PORT` | â€” | Injected by Render; the app listens on `0.0.0.0:$PORT` |
+| `NODE_ENV` | ”” | `production` (Render sets this) |
+| `PORT` | ”” | Injected by Render; the app listens on `0.0.0.0:$PORT` |
 | `COOKIE_DOMAIN` | no | Leave empty (host-only cookie) |
 | `SMTP_*`, `FROM_EMAIL` | no | Only needed for magic-link login |
 
@@ -90,8 +90,8 @@ SQL before applying it.
 
 | Route | Purpose | Touches the DB |
 |---|---|---|
-| `GET /health` | Liveness â€” used as Render's health check | No |
-| `GET /health/ready` | Readiness â€” verifies the database round-trip | Yes |
+| `GET /health` | Liveness ”” used as Render's health check | No |
+| `GET /health/ready` | Readiness ”” verifies the database round-trip | Yes |
 | `GET /projects` `/skills` `/experience` `/about` | Public content | Yes |
 | `POST /auth/login` `/auth/register` `/auth/logout` | Session (httpOnly cookie) | Yes |
 | `GET /auth/me` | Current user | Yes |
