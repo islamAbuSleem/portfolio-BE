@@ -1,0 +1,54 @@
+# Render Blueprint for portfolio-BE (NestJS API)
+#
+# Apply from the Render dashboard:  New -> Blueprint -> select this repo.
+# Every `sync: false` variable must be filled in before the first deploy.
+#
+# Free-tier notes:
+#   - The free web service sleeps after 15 minutes of inactivity and takes
+#     ~50 seconds to wake on the first request after sleeping.
+#   - The free Postgres offering is not used; the database lives on Neon.
+#   - `plan: free` is what keeps the recurring cost at $0.
+
+services:
+  - type: web
+    name: portfolio-be
+    runtime: node
+    plan: free
+    # Oregon matches Neon's default AWS region (aws-us-east-1) and keeps
+    # latency between Render and Neon low.
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      # --- Neon (pooled URL for runtime traffic) ---
+      - key: DATABASE_URL
+        sync: false
+      # --- Auth ---
+      - key: JWT_SECRET
+        generateValue: true
+      # --- Public URLs ---
+      # Comma-separated CORS allow-list. Must contain the exact Worker origin.
+      - key: FRONTEND_URL
+        sync: false
+      # Single origin used to build magic-link emails.
+      - key: APP_URL
+        sync: false
+      - key: TRUST_PROXY
+        value: "1"
+      # --- Email (optional) ---
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: FROM_EMAIL
+        sync: false
