@@ -35,10 +35,15 @@ Either use the Blueprint (`render.yaml`) or create the service manually.
 |---|---|
 | Region | Oregon |
 | Branch | `main` |
-| Build Command | `npm ci && npm run build` |
+| Build Command | `npm ci --include=dev && npm run build` |
 | Start Command | `npm run start:prod` |
 | Instance Type | Free |
 | Health Check Path | `/health` |
+
+> **Why `--include=dev`?** `NODE_ENV=production` makes `npm ci` skip
+> devDependencies. The Nest CLI and TypeScript are devDependencies, so
+> without this the build fails with `sh: 1: nest: not found`. The dev
+> packages are only needed at build time; the runtime uses `dependencies`.
 
 **Blueprint:** New â†’ Blueprint â†’ select the repo. `render.yaml` pre-fills
 everything; supply the `sync: false` values.

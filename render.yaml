@@ -17,7 +17,11 @@ services:
     # Oregon matches Neon's default AWS region (aws-us-east-1) and keeps
     # latency between Render and Neon low.
     region: oregon
-    buildCommand: npm ci && npm run build
+    # NODE_ENV is set to production below, which makes npm skip
+    # devDependencies. The Nest CLI and TypeScript live in devDependencies,
+    # so they must be included explicitly or the build fails with
+    # "sh: 1: nest: not found".
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm run start:prod
     healthCheckPath: /health
     autoDeployTrigger: commit
