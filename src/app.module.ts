@@ -8,7 +8,11 @@ import { SkillsModule } from './skills/skills.module';
 import { ExperienceModule } from './experience/experience.module';
 import { ProjectsModule } from './projects/projects.module';
 import { CommonModule } from './common/common.module';
+import { HealthModule } from './health/health.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { validateEnv } from './config/env.validation';
 
 @Module({
   imports: [
@@ -19,9 +23,13 @@ import { ConfigModule } from '@nestjs/config';
     ExperienceModule,
     ProjectsModule,
     CommonModule,
-    ConfigModule.forRoot({ isGlobal: true }),
+    HealthModule,
+    ConfigModule.forRoot({ isGlobal: true, validate: validateEnv }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+  ],
 })
 export class AppModule {}
