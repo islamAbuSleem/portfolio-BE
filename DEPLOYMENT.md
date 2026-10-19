@@ -54,7 +54,7 @@ everything; supply the `sync: false` values.
 |---|---|---|
 | `DATABASE_URL` | yes | Neon **pooled** URL (host contains `-pooler`) |
 | `JWT_SECRET` | yes | `openssl rand -base64 48` (Render can generate it) |
-| `FRONTEND_URL` | yes | `https://portfolio-fe.<sub>.workers.dev` â€” comma-separated allow-list |
+| `FRONTEND_URL` | yes | `https://portfolio-fe.islamabusleem.workers.dev` â€” comma-separated allow-list |
 | `APP_URL` | recommended | The same origin, used to build magic-link emails |
 | `TRUST_PROXY` | recommended | `1` |
 | `NODE_ENV` | â€” | `production` (Render sets this) |
